@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login | Student Hub</title>
+  <style>
+    :root {
+      --bg-light: #ffffff;
+      --bg-dark: #1e1e2f;
+      --card-light: #f3f4f6;
+      --card-dark: #2b2b3d;
+      --text-light: #1f2937;
+      --text-dark: #f9fafb;
+      --accent: #7c4dff;
+      --accent-hover: #6936e5;
+      --gray: #e5e7eb;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Segoe UI", sans-serif;
+      background: var(--bg-light);
+      color: var(--text-light);
+      transition: all 0.3s ease;
+      display: flex;
+      height: 100vh;
+      overflow: hidden;
+    }
+    body.dark {
+      background: var(--bg-dark);
+      color: var(--text-dark);
+    }
+
+    /* Sidebar */
+    .sidebar {
+      width: 250px;
+      background: var(--card-light);
+      padding: 20px;
+      transition: width 0.3s ease;
+      display: flex;
+      flex-direction: column;
+    }
+    body.dark .sidebar {
+      background: var(--card-dark);
+    }
+    .sidebar h2 {
+      font-size: 18px;
+      margin: 15px 0;
+      color: var(--accent);
+    }
+    .sidebar ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      flex: 1;
+    }
+    .sidebar ul li {
+      margin: 10px 0;
+      font-size: 14px;
+      cursor: pointer;
+    }
+    .collapse-btn {
+      background: var(--accent);
+      color: white;
+      border: none;
+      padding: 8px;
+      border-radius: 8px;
+      cursor: pointer;
+      align-self: flex-start;
+    }
+    .sidebar.collapsed {
+      width: 70px;
+      text-align: center;
+    }
+    .sidebar.collapsed h2,
+    .sidebar.collapsed ul li,
+    .sidebar.collapsed .contact {
+      display: none;
+    }
+
+    /* Main container */
+    .main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+      position: relative;
+      overflow-y: auto;
+    }
+
+    /* Top Bar */
+    .top-bar {
+      position: absolute;
+      top: 15px;
+      left: 20px;
+      font-size: 20px;
+      font-weight: bold;
+      color: var(--accent);
+    }
+
+    /* Login Card */
+    .login-card {
+      background: var(--card-light);
+      padding: 30px;
+      border-radius: 15px;
+      width: 100%;
+      max-width: 400px;
+      text-align: center;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      margin-top: 80px;
+    }
+    body.dark .login-card {
+      background: var(--card-dark);
+    }
+    .login-card h1 {
+      margin-bottom: 15px;
+      color: var(--accent);
+    }
+    .login-card input {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      border: 1px solid var(--gray);
+      border-radius: 10px;
+    }
+    body.dark .login-card input {
+      background: #333;
+      color: white;
+      border: 1px solid #444;
+    }
+
+    /* Anchor Buttons */
+    a.btn {
+      display: block;
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: bold;
+      transition: background 0.3s ease;
+      text-align: center;
+      text-decoration: none;
+    }
+    a.btn-mentor {
+      background: var(--accent);
+      color: white !important;
+    }
+    a.btn-mentor:hover { background: var(--accent-hover); }
+    a.btn-student {
+      background: #ede9fe;
+      color: var(--accent) !important;
+    }
+    a.btn-student:hover { background: #ddd6fe; }
+
+    /* Social buttons */
+    .social-btn {
+      width: 48%;
+      display: inline-block;
+      padding: 10px;
+      margin: 5px 1%;
+      border-radius: 10px;
+      border: 1px solid var(--accent);
+      cursor: pointer;
+      font-size: 14px;
+      background: transparent;
+      color: var(--accent);
+      text-align: center;
+    }
+
+    .login-card a {
+      display: block;
+      margin-top: 10px;
+      font-size: 14px;
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    /* Stats */
+    .stats {
+      margin-top: 25px;
+      text-align: center;
+    }
+    .counter {
+      font-size: 24px;
+      font-weight: bold;
+      color: var(--accent);
+    }
+    .progress-container {
+      width: 300px;
+      background: var(--gray);
+      border-radius: 10px;
+      overflow: hidden;
+      margin: 10px auto;
+    }
+    .progress-bar {
+      height: 15px;
+      background: var(--accent);
+      width: 0%;
+      transition: width 1s ease-in-out;
+    }
+
+    /* Testimonials */
+    .testimonials {
+      margin-top: 30px;
+      max-width: 400px;
+      font-style: italic;
+      text-align: center;
+      color: gray;
+    }
+
+    /* Event Ticker */
+    .ticker {
+      margin-top: 20px;
+      background: var(--accent);
+      color: white;
+      padding: 8px 15px;
+      border-radius: 8px;
+      overflow: hidden;
+      width: 90%;
+      max-width: 500px;
+      white-space: nowrap;
+    }
+    .ticker span {
+      display: inline-block;
+      padding-left: 100%;
+      animation: scroll 12s linear infinite;
+    }
+    @keyframes scroll {
+      0% { transform: translateX(0%); }
+      100% { transform: translateX(-100%); }
+    }
+
+    /* Theme Toggle */
+    .toggle-theme {
+      position: absolute;
+      top: 15px;
+      right: 20px;
+      padding: 8px 14px;
+      border: none;
+      border-radius: 8px;
+      background: var(--accent);
+      color: white;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <!-- Sidebar -->
+  <div class="sidebar" id="sidebar">
+    <button class="collapse-btn" onclick="toggleSidebar()">☰</button>
+    <h2>About Us</h2>
+    <ul>
+      <li>✔ Connect Students & Mentors</li>
+      <li>✔ Share Portfolios</li>
+      <li>✔ Explore Opportunities</li>
+      <li>✔ Community Chat</li>
+      <li>✔ Events & Workshops</li>
+    </ul>
+    <h2>Quick Links</h2>
+    <ul>
+      <li>📅 Events</li>
+      <li>💬 Community</li>
+      <li>📊 Dashboard</li>
+    </ul>
+    <div class="contact">
+      <h2>Contact</h2>
+      <ul>
+        <li>📧 support@studenthub.com</li>
+        <li>📞 +91-9876543210</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Main -->
+  <div class="main">
+    <div class="top-bar">🎓 Student Hub</div>
+    <button class="toggle-theme" onclick="toggleTheme()">🌙 / ☀️</button>
+
+    <!-- Login Card -->
+    <div class="login-card">
+      <h1>Welcome Back</h1>
+      <input type="email" placeholder="Enter Email">
+      <input type="password" placeholder="Enter Password">
+
+      <!-- Fixed buttons -->
+      <a href="mentor.html" class="btn btn-mentor">Join as Mentor</a>
+      <a href="student.html" class="btn btn-student">Join as Student</a>
+
+      <div>
+        <button class="social-btn">Google</button>
+        <button class="social-btn">LinkedIn</button>
+      </div>
+      <a href="#">Forgot Password?</a>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats">
+      <p>👥 Total Users: <span class="counter" id="userCount">0</span></p>
+      <div class="progress-container">
+        <div class="progress-bar" id="progressBar"></div>
+      </div>
+      <p>🚀 Growing every day with mentors & students!</p>
+    </div>
+
+    <!-- Testimonials -->
+    <div class="testimonials" id="testimonialBox">
+      “This platform helped me connect with amazing mentors!” – A Student
+    </div>
+
+    <!-- Event Ticker -->
+    <div class="ticker"><span>🚀 Hackathon starting in 3 days! | 🎤 Guest Lecture on AI tomorrow | 🎯 Career Fair next week</span></div>
+  </div>
+
+  <script>
+    // Sidebar Toggle
+    function toggleSidebar() {
+      document.getElementById("sidebar").classList.toggle("collapsed");
+    }
+
+    // Dark Mode Toggle
+    function toggleTheme() {
+      document.body.classList.toggle("dark");
+    }
+
+    // Animated User Counter
+    let count = 0;
+    let target = 10245;
+    let counter = document.getElementById("userCount");
+    let interval = setInterval(() => {
+      if (count < target) {
+        count += Math.ceil(target / 200);
+        counter.textContent = count.toLocaleString();
+      } else {
+        counter.textContent = target.toLocaleString();
+        clearInterval(interval);
+      }
+    }, 20);
+
+    // Progress Bar (60% students vs mentors)
+    setTimeout(() => {
+      document.getElementById("progressBar").style.width = "60%";
+    }, 500);
+
+    // Testimonials Rotation
+    const testimonials = [
+      "“This platform helped me connect with amazing mentors!” – A Student",
+      "“Great way to share my knowledge and guide others.” – A Mentor",
+      "“I found internship opportunities through Student Hub!” – Student",
+      "“One of the best student-mentor communities online.” – Mentor"
+    ];
+    let idx = 0;
+    setInterval(() => {
+      idx = (idx + 1) % testimonials.length;
+      document.getElementById("testimonialBox").textContent = testimonials[idx];
+    }, 4000);
+  </script>
+</body>
+</html>
